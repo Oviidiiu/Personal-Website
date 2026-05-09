@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Mono:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f7f4;
+  --bg2:#f0ede8;
+  --bg3:#e8e4de;
+  --surface:#ffffff;
+  --border:#ddd9d2;
+  --border2:#c8c3bb;
+  --text:#1a1a2e;
+  --muted:#6b6b7a;
+  --accent:#1b3a6b;
+  --accent2:#c8943a;
+  --accent3:#2d6a4f;
+  --accent4:#8b1a1a;
+  --font-head:'Playfair Display',serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;cursor:none}
+
+/* Custom cursor */
+#cursor{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s}
+#cursor-ring{position:fixed;width:32px;height:32px;border:1.5px solid rgba(27,58,107,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .12s ease-out}
+body:hover #cursor{opacity:1}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:2px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 3rem;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);background:rgba(248,247,244,.95);border-bottom:1px solid var(--border);transition:all .3s}
+.nav-logo{font-family:var(--font-head);font-size:1.15rem;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.nav-logo span{color:var(--accent2)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;font-family:var(--font-body);font-weight:500}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{background:var(--accent);border:none;color:white;padding:.5rem 1.4rem;border-radius:2px;font-family:var(--font-body);font-size:.78rem;font-weight:600;letter-spacing:.06em;cursor:pointer;transition:all .2s}
+.nav-cta:hover{background:#254d8f}
+
+/* Hero */
+#hero{min-height:100vh;display:flex;align-items:center;padding:0 3rem;position:relative;overflow:hidden;background:var(--bg)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;width:100%;max-width:1400px;margin:0 auto}
+.hero-tag{font-family:var(--font-body);font-size:.72rem;color:var(--accent2);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;font-weight:600}
+.hero-tag::before{content:'';width:2rem;height:1px;background:var(--accent2)}
+.hero-title{font-family:var(--font-head);font-size:clamp(2.8rem,5.5vw,5rem);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem;color:var(--text)}
+.hero-title .line{overflow:hidden;display:block}
+.hero-title .line span{display:block;transform:translateY(100%);animation:slideUp .8s cubic-bezier(.16,1,.3,1) forwards}
+.hero-title .line:nth-child(1) span{animation-delay:.1s}
+.hero-title .line:nth-child(2) span{animation-delay:.2s}
+.hero-title .line:nth-child(3) span{animation-delay:.3s}
+.hero-title .accent-word{color:var(--accent)}
+.hero-desc{color:var(--muted);font-size:1rem;line-height:1.8;margin-bottom:2.5rem;max-width:480px;font-weight:300}
+.hero-actions{display:flex;gap:1rem;align-items:center}
+.btn-primary{background:var(--accent);color:white;padding:.85rem 2rem;border:none;border-radius:2px;font-family:var(--font-body);font-size:.82rem;font-weight:600;letter-spacing:.08em;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;text-transform:uppercase}
+.btn-primary:hover{background:#254d8f;transform:translateY(-2px)}
+.btn-secondary{background:transparent;color:var(--text);padding:.85rem 2rem;border:1px solid var(--border2);border-radius:2px;font-family:var(--font-body);font-size:.82rem;font-weight:500;letter-spacing:.08em;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;text-transform:uppercase}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Hero visual */
+.hero-visual{position:relative;height:520px}
+.data-viz{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.viz-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.5rem;width:100%;box-shadow:0 4px 24px rgba(27,58,107,.08)}
+.viz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.viz-title{font-family:var(--font-body);font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.viz-badge{background:rgba(200,148,58,.1);color:var(--accent2);font-family:var(--font-body);font-size:.68rem;padding:.3rem .7rem;border-radius:2px;letter-spacing:.06em;font-weight:600}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:160px;margin-bottom:1rem}
+.bar-group{flex:1;display:flex;gap:3px;align-items:flex-end}
+.bar{flex:1;border-radius:2px 2px 0 0;animation:growUp .8s cubic-bezier(.16,1,.3,1) forwards;transform-origin:bottom}
+@keyframes growUp{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.bar.b-accent{background:var(--accent)}
+.bar.b-accent2{background:var(--accent2)}
+.chart-labels{display:flex;gap:6px}
+.chart-label{flex:1;text-align:center;font-family:var(--font-mono);font-size:.62rem;color:var(--muted)}
+.metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:1rem}
+.metric{background:var(--bg2);padding:.75rem;border-radius:3px;text-align:center;border:1px solid var(--border)}
+.metric-val{font-family:var(--font-head);font-size:1.3rem;font-weight:700;color:var(--text);display:block}
+.metric-val.green{color:var(--accent3)}
+.metric-val.purple{color:var(--accent)}
+.metric-val.red{color:var(--accent4)}
+.metric-lbl{font-family:var(--font-body);font-size:.62rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin-top:.25rem;font-weight:500}
+
+/* Floating elements */
+.float-card{position:absolute;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.75rem 1rem;box-shadow:0 4px 16px rgba(27,58,107,.1)}
+.float-card.top-right{top:2rem;right:-2rem;animation:floatY 4s ease-in-out infinite}
+.float-card.bot-left{bottom:4rem;left:-2rem;animation:floatY 4s ease-in-out infinite .5s}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.float-badge{font-family:var(--font-mono);font-size:.68rem;white-space:nowrap;color:var(--text)}
+.float-badge strong{color:var(--accent2)}
+
+/* Background effects */
+.bg-glow{position:absolute;border-radius:50%;filter:blur(100px);opacity:.06;pointer-events:none}
+.bg-glow.g1{width:500px;height:500px;background:var(--accent);top:-10%;left:-10%}
+.bg-glow.g2{width:400px;height:400px;background:var(--accent2);bottom:-10%;right:10%}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(200,195,187,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(200,195,187,.25) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+
+/* Sections */
+section{position:relative;z-index:1}
+.section-wrap{max-width:1400px;margin:0 auto;padding:6rem 3rem}
+.section-label{font-family:var(--font-body);font-size:.72rem;color:var(--accent2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem;font-weight:600}
+.section-label::before{content:'';width:2rem;height:1px;background:var(--accent2)}
+.section-title{font-family:var(--font-head);font-size:clamp(2rem,4vw,3.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:1rem;color:var(--text)}
+.section-desc{color:var(--muted);font-size:.95rem;line-height:1.8;max-width:560px;margin-bottom:4rem;font-weight:300}
+
+/* Skills */
+#skills{background:var(--bg2)}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.skill-card{background:var(--surface);padding:2.5rem;transition:background .2s,box-shadow .2s;position:relative;overflow:hidden}
+.skill-card:hover{background:var(--bg);box-shadow:0 8px 32px rgba(27,58,107,.08)}
+.skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.skill-card.sql::before{background:var(--accent)}
+.skill-card.dax::before{background:var(--accent2)}
+.skill-card.pbi::before{background:var(--accent3)}
+.skill-card.excel::before{background:var(--accent4)}
+.skill-card:hover::before{transform:scaleX(1)}
+.skill-icon{font-size:1.8rem;margin-bottom:1.5rem;display:block}
+.skill-name{font-family:var(--font-head);font-size:1.2rem;font-weight:700;margin-bottom:.5rem;color:var(--text)}
+.skill-desc{color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:1.5rem;font-weight:300}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+.tag{background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-family:var(--font-mono);font-size:.68rem;padding:.3rem .65rem;border-radius:2px;letter-spacing:.04em}
+.tag.active{background:rgba(27,58,107,.08);border-color:rgba(27,58,107,.25);color:var(--accent)}
+.skill-bar-wrap{margin-top:1.5rem}
+.skill-bar-label{display:flex;justify-content:space-between;font-family:var(--font-body);font-size:.7rem;color:var(--muted);margin-bottom:.5rem;font-weight:500}
+.skill-bar{height:2px;background:var(--border);border-radius:1px;overflow:hidden}
+.skill-bar-fill{height:100%;border-radius:1px;width:0;transition:width 1s cubic-bezier(.16,1,.3,1)}
+
+/* Projects */
+#projects .section-wrap{max-width:1400px}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s;cursor:pointer}
+.project-card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 12px 40px rgba(27,58,107,.1)}
+.project-preview{height:200px;position:relative;overflow:hidden;background:var(--bg2)}
+.project-viz{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.project-badge{position:absolute;top:1rem;right:1rem;font-family:var(--font-body);font-size:.62rem;letter-spacing:.1em;padding:.3rem .7rem;border-radius:2px;text-transform:uppercase;font-weight:600}
+.pb-sql{background:rgba(27,58,107,.1);color:var(--accent);border:1px solid rgba(27,58,107,.2)}
+.pb-pbi{background:rgba(139,26,26,.1);color:var(--accent4);border:1px solid rgba(139,26,26,.2)}
+.pb-excel{background:rgba(45,106,79,.1);color:var(--accent3);border:1px solid rgba(45,106,79,.2)}
+.pb-dax{background:rgba(200,148,58,.1);color:var(--accent2);border:1px solid rgba(200,148,58,.2)}
+.project-body{padding:1.5rem}
+.project-name{font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:.5rem;color:var(--text)}
+.project-desc{color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:1.25rem;font-weight:300}
+.project-meta{display:flex;justify-content:space-between;align-items:center}
+.project-tools{display:flex;gap:.4rem}
+.project-tools .tag{font-size:.62rem;padding:.2rem .5rem}
+.project-arrow{color:var(--muted);font-size:1.1rem;transition:transform .2s,color .2s}
+.project-card:hover .project-arrow{transform:translate(3px,-3px);color:var(--accent)}
+
+/* Timeline / Experience */
+#experience{background:var(--bg2)}
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border2)}
+.tl-item{position:relative;padding:0 0 3rem 2rem}
+.tl-item::before{content:'';position:absolute;left:-5px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent2);border:2px solid var(--bg2);transition:background .3s}
+.tl-item:hover::before{background:var(--accent)}
+.tl-date{font-family:var(--font-mono);font-size:.68rem;color:var(--accent2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+.tl-title{font-family:var(--font-head);font-size:1.2rem;font-weight:700;margin-bottom:.25rem;color:var(--text)}
+.tl-company{color:var(--muted);font-size:.88rem;margin-bottom:.75rem;font-weight:500}
+.tl-desc{color:var(--muted);font-size:.88rem;line-height:1.7;font-weight:300}
+
+/* SQL showcase */
+.sql-window{background:var(--text);border:1px solid var(--border2);border-radius:4px;overflow:hidden;margin:2rem 0}
+.sql-titlebar{background:#252535;padding:.75rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid #333345}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}
+.dot.y{background:#ffbd2e}
+.dot.g{background:#28c840}
+.sql-filename{font-family:var(--font-mono);font-size:.72rem;color:#888;margin-left:.5rem}
+.sql-code{padding:1.5rem;font-family:var(--font-mono);font-size:.83rem;line-height:1.8;overflow-x:auto;background:#1e1e2e;color:#cdd6f4}
+.kw{color:#cba6f7}
+.fn{color:#89b4fa}
+.str{color:#a6e3a1}
+.cm{color:#585b70;font-style:italic}
+.col{color:#cdd6f4}
+.tbl{color:#fab387}
+.num{color:#f9e2af}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);margin:4rem 0}
+.stat-block{background:var(--surface);padding:3rem 2rem;text-align:center;transition:background .2s}
+.stat-block:hover{background:var(--bg2)}
+.stat-num{font-family:var(--font-head);font-size:3.2rem;font-weight:700;letter-spacing:-.03em;color:var(--accent);display:block;line-height:1}
+.stat-num span{color:var(--accent2)}
+.stat-lbl{font-family:var(--font-body);font-size:.7rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-top:.5rem;display:block;font-weight:500}
+
+/* Contact */
+#contact{background:var(--accent);text-align:center}
+#contact .section-wrap{display:flex;flex-direction:column;align-items:center}
+#contact .section-label{color:rgba(255,255,255,.5)}
+#contact .section-label::before{background:rgba(255,255,255,.4)}
+#contact .section-title{color:white}
+#contact .section-desc{color:rgba(255,255,255,.7);text-align:center;max-width:480px}
+.contact-cards{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem}
+.contact-link{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:2px;padding:1rem 1.75rem;text-decoration:none;color:white;font-family:var(--font-body);font-size:.78rem;font-weight:500;letter-spacing:.08em;transition:all .2s;display:flex;align-items:center;gap:.75rem;text-transform:uppercase}
+.contact-link:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
+
+/* Animations */
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Power BI donut */
+.donut-wrap{position:relative;width:140px;height:140px}
+.donut-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--text)}
+.donut-label span{font-size:.62rem;color:var(--muted);font-family:var(--font-body);letter-spacing:.05em;font-weight:500}
+
+/* Excel grid viz */
+.excel-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;padding:1rem}
+.cell{height:28px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.62rem;color:var(--muted)}
+.cell.header{background:rgba(27,58,107,.1);color:var(--accent);font-weight:500}
+.cell.data{background:var(--bg3)}
+.cell.formula{background:rgba(200,148,58,.08);color:var(--accent2)}
+.cell.total{background:rgba(45,106,79,.1);color:var(--accent3);font-weight:600}
+
+/* Scrollbar indicator */
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--accent2);z-index:200;transition:width .1s}
+
+/* Avatar */
+.nav-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;border:2px solid var(--border2);overflow:hidden;flex-shrink:0}
+
+/* Responsive */
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .hero-visual{display:none}
+  .section-wrap{padding:4rem 1.5rem}
+}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div class="grid-bg"></div>
+<div class="progress-bar" id="progress"></div>
+
+<!-- Nav -->
+<nav>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <div class="nav-logo">Data<span>Manager</span></div>
+    <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;border:2.5px solid var(--accent2);overflow:hidden;flex-shrink:0;box-shadow:0 0 12px rgba(200,148,58,.3)">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.95)"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="rgba(255,255,255,0.95)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#ai">AI & Analytics</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Hire Me</button>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="bg-glow g1"></div>
+  <div class="bg-glow g2"></div>
+  <div class="hero-grid">
+    <div class="hero-content">
+      <p class="hero-tag">Data Analytics Professional</p>
+      <h1 class="hero-title">
+        <span class="line"><span>Turning Raw</span></span>
+        <span class="line"><span><em class="accent-word">Data</em> Into</span></span>
+        <span class="line"><span>Decisions</span></span>
+      </h1>
+      <p class="hero-desc">Crafting powerful analytics solutions with SQL, DAX, Power BI, and Excel — transforming complex datasets into actionable insights that drive real business value.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">View Projects</a>
+        <a href="#skills" class="btn-secondary">My Toolkit</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="data-viz">
+        <div class="viz-card">
+          <div class="viz-header">
+            <span class="viz-title">Sales Performance Dashboard</span>
+            <span class="viz-badge">● Live</span>
+          </div>
+          <div class="chart-bars" id="heroChart"></div>
+          <div class="chart-labels" id="heroLabels"></div>
+          <div class="metrics-row">
+            <div class="metric"><span class="metric-val green" id="m1">0</span><span class="metric-lbl">Revenue</span></div>
+            <div class="metric"><span class="metric-val purple" id="m2">0%</span><span class="metric-lbl">Growth</span></div>
+            <div class="metric"><span class="metric-val red" id="m3">0</span><span class="metric-lbl">Queries</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="float-card top-right">
+        <p class="float-badge">DAX Measure: <strong>↑ 23.4%</strong></p>
+      </div>
+      <div class="float-card bot-left">
+        <p class="float-badge">SQL Rows: <strong>2.4M</strong> processed</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="section-wrap">
+    <p class="section-label reveal">Core Toolkit</p>
+    <h2 class="section-title reveal">Skills &amp; Technologies</h2>
+    <p class="section-desc reveal">Four pillars of modern data analytics — from raw querying to executive-ready dashboards.</p>
+    <div class="skills-grid reveal">
+      <div class="skill-card sql">
+        <span class="skill-icon">🗄️</span>
+        <h3 class="skill-name">SQL</h3>
+        <p class="skill-desc">Writing complex queries, CTEs, window functions, stored procedures, and performance-optimised joins across large relational databases.</p>
+        <div class="skill-tags">
+          <span class="tag active">T-SQL</span>
+          <span class="tag active">PostgreSQL</span>
+          <span class="tag">CTEs</span>
+          <span class="tag">Window Fns</span>
+          <span class="tag">Indexing</span>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Proficiency</span><span class="sql-pct">0%</span></div>
+          <div class="skill-bar"><div class="skill-bar-fill" style="background:var(--accent)" data-width="92"></div></div>
+        </div>
+      </div>
+      <div class="skill-card dax">
+        <span class="skill-icon">⚡</span>
+        <h3 class="skill-name">DAX</h3>
+        <p class="skill-desc">Building advanced calculated measures, time intelligence functions, and complex data models within Power BI and Analysis Services.</p>
+        <div class="skill-tags">
+          <span class="tag active">Measures</span>
+          <span class="tag active">Time Intel</span>
+          <span class="tag">CALCULATE</span>
+          <span class="tag">FILTER</span>
+          <span class="tag">Variables</span>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Proficiency</span><span class="dax-pct">0%</span></div>
+          <div class="skill-bar"><div class="skill-bar-fill" style="background:var(--accent2)" data-width="88"></div></div>
+        </div>
+      </div>
+      <div class="skill-card pbi">
+        <span class="skill-icon">📊</span>
+        <h3 class="skill-name">Power BI</h3>
+        <p class="skill-desc">Designing executive dashboards, interactive reports, data models with relationships, and RLS security implementations.</p>
+        <div class="skill-tags">
+          <span class="tag active">Dashboards</span>
+          <span class="tag active">Power Query</span>
+          <span class="tag">Data Model</span>
+          <span class="tag">RLS</span>
+          <span class="tag">Dataflows</span>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Proficiency</span><span class="pbi-pct">0%</span></div>
+          <div class="skill-bar"><div class="skill-bar-fill" style="background:var(--accent3)" data-width="95"></div></div>
+        </div>
+      </div>
+      <div class="skill-card excel">
+        <span class="skill-icon">📋</span>
+        <h3 class="skill-name">Excel</h3>
+        <p class="skill-desc">Advanced formulas, Power Pivot, dynamic arrays, pivot tables, VBA automation, and financial modelling with scenario analysis.</p>
+        <div class="skill-tags">
+          <span class="tag active">Power Pivot</span>
+          <span class="tag active">VBA</span>
+          <span class="tag">XLOOKUP</span>
+          <span class="tag">Dynamic Arrays</span>
+          <span class="tag">Pivot</span>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Proficiency</span><span class="excel-pct">0%</span></div>
+          <div class="skill-bar"><div class="skill-bar-fill" style="background:var(--accent4)" data-width="90"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-block reveal"><span class="stat-num counter" data-target="25"><span>0</span>+</span><span class="stat-lbl">Projects Delivered</span></div>
+  <div class="stat-block reveal"><span class="stat-num counter" data-target="2.4+"><span>0</span>B</span><span class="stat-lbl">Rows Processed</span></div>
+  <div class="stat-block reveal"><span class="stat-num counter" data-target="98"><span>0</span><span>%</span></span><span class="stat-lbl">Client Satisfaction</span></div>
+  <div class="stat-block reveal"><span class="stat-num counter" data-target="4"><span>0</span>+</span><span class="stat-lbl">Years Experience</span></div>
+</div>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-wrap">
+    <p class="section-label reveal">Portfolio</p>
+    <h2 class="section-title reveal">Featured Projects</h2>
+    <p class="section-desc reveal">A selection of data analytics work spanning SQL optimisation, DAX modelling, and interactive Power BI dashboards.</p>
+    <div class="projects-grid">
+
+      <!-- Project 1: SQL -->
+      <div class="project-card reveal">
+        <div class="project-preview">
+          <div class="project-viz">
+            <div class="sql-window" style="margin:0;width:100%">
+              <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">revenue_analysis.sql</span></div>
+              <div class="sql-code" style="padding:.75rem;font-size:.72rem;line-height:1.7">
+                <span class="kw">WITH</span> <span class="tbl">monthly_rev</span> <span class="kw">AS</span> (<br>
+                &nbsp;&nbsp;<span class="kw">SELECT</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">DATETRUNC</span>(<span class="str">'month'</span>, order_date) <span class="kw">AS</span> month,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span>(revenue) <span class="kw">AS</span> total_rev<br>
+                &nbsp;&nbsp;<span class="kw">FROM</span> <span class="tbl">orders</span><br>
+                &nbsp;&nbsp;<span class="kw">GROUP BY</span> <span class="num">1</span><br>
+                )<br>
+                <span class="kw">SELECT</span> *, <span class="fn">LAG</span>(total_rev) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> month)<br>
+                <span class="kw">FROM</span> <span class="tbl">monthly_rev</span>
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-sql">SQL</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Revenue Trend Analysis</h3>
+          <p class="project-desc">Complex multi-CTE query with window functions analysing 18-month revenue trends across 2.4M+ rows with sub-second performance.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">T-SQL</span><span class="tag">CTEs</span><span class="tag">Window Fns</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: Power BI -->
+      <div class="project-card reveal">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;gap:1rem">
+            <div style="display:flex;gap:1rem;align-items:center">
+              <div class="donut-wrap">
+                <svg width="140" height="140" viewBox="0 0 140 140">
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#e8e4de" stroke-width="18"/>
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#1b3a6b" stroke-width="18" stroke-dasharray="196 131" stroke-dashoffset="-49" stroke-linecap="round"/>
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#c8943a" stroke-width="18" stroke-dasharray="110 217" stroke-dashoffset="-245" stroke-linecap="round"/>
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#2d6a4f" stroke-width="18" stroke-dasharray="60 267" stroke-dashoffset="-355" stroke-linecap="round"/>
+                </svg>
+                <div class="donut-label">74%<span>Quota</span></div>
+              </div>
+              <div style="flex:1">
+                <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted);margin-bottom:.5rem">Region Split</div>
+                <div style="display:flex;flex-direction:column;gap:.4rem">
+                  <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#1b3a6b"></div><span style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">North 60%</span></div>
+                  <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#c8943a"></div><span style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">South 34%</span></div>
+                  <div style="display:flex;align-items:center;gap:.5rem"><div style="width:8px;height:8px;border-radius:50%;background:#2d6a4f"></div><span style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">West 18%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-pbi">Power BI</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Executive Sales Dashboard</h3>
+          <p class="project-desc">Real-time Power BI dashboard with custom visuals, row-level security, and advanced DAX KPI measures for C-suite reporting.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">RLS</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3: Excel -->
+      <div class="project-card reveal">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
+            <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted);margin-bottom:.5rem;padding:0 .25rem">Financial Model — Scenario Analysis</div>
+            <div class="excel-grid">
+              <div class="cell header">Month</div><div class="cell header">Revenue</div><div class="cell header">COGS</div><div class="cell header">Margin</div><div class="cell header">Growth</div><div class="cell header">Fcst</div>
+              <div class="cell data">Jan</div><div class="cell data">82K</div><div class="cell data">41K</div><div class="cell formula">=50%</div><div class="cell data">—</div><div class="cell formula">85K</div>
+              <div class="cell data">Feb</div><div class="cell data">94K</div><div class="cell data">45K</div><div class="cell formula">=52%</div><div class="cell data">+14%</div><div class="cell formula">97K</div>
+              <div class="cell data">Mar</div><div class="cell data">108K</div><div class="cell data">50K</div><div class="cell formula">=54%</div><div class="cell data">+15%</div><div class="cell formula">112K</div>
+              <div class="cell total">Total</div><div class="cell total">284K</div><div class="cell total">136K</div><div class="cell total">52%</div><div class="cell total">+29%</div><div class="cell total">294K</div>
+            </div>
+          </div>
+          <span class="project-badge pb-excel">Excel</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Financial Forecasting Model</h3>
+          <p class="project-desc">Dynamic 3-scenario Excel model with Power Pivot, automated data refresh, and conditional formatting dashboards for quarterly planning.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">Excel</span><span class="tag">Power Pivot</span><span class="tag">VBA</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4: DAX -->
+      <div class="project-card reveal">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
+            <div class="sql-window" style="margin:0">
+              <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">YTD_Revenue.dax</span></div>
+              <div class="sql-code" style="padding:.75rem;font-size:.72rem;line-height:1.7">
+                <span class="cm">-- Year-over-year comparison</span><br>
+                <span class="tbl">YTD Sales</span> :=<br>
+                <span class="kw">CALCULATE</span>(<br>
+                &nbsp;&nbsp;[Total Revenue],<br>
+                &nbsp;&nbsp;<span class="fn">DATESYTD</span>(<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">'Date'[Date]</span><br>
+                &nbsp;&nbsp;)<br>
+                )
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-dax">DAX</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Time Intelligence Library</h3>
+          <p class="project-desc">Reusable DAX measure library with 40+ time intelligence calculations — YTD, MTD, rolling averages, and YoY variance analysis.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">DAX</span><span class="tag">CALCULATE</span><span class="tag">DATESYTD</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-wrap">
+    <p class="section-label reveal">Background</p>
+    <h2 class="section-title reveal">Experience</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem">
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="tl-date">2025 — Present</div>
+          <h3 class="tl-title">Data Manager</h3>
+          <p class="tl-company">Talk Online Panel | Vienna</p>
+          <p class="tl-desc">Leading analytics initiatives across finance, operational, and marketing sectors. Architecting Power BI solutions and optimising SQL data pipelines for different clients.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2025 — 2025</div>
+          <h3 class="tl-title">Lead Plant Business Analyst</h3>
+          <p class="tl-company">Robert Bosch GmbH</p>
+          <p class="tl-desc">Developed financial models in Excel and migrated legacy Access reports to modern SQL-backed Power BI dashboards. Introduced DAX calculated measures for KPI tracking.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2022 — 2025</div>
+          <h3 class="tl-title">Laboratory Project Engineer</h3>
+          <p class="tl-company">Robert Bosch GmbH</p>
+          <p class="tl-desc">Built self-service BI infrastructure from scratch. Delivered 30+ automated dashboards, reducing manual reporting by 80% using Power BI and SQL Server.
+          </p>
+        </div>
+      </div>
+      <div class="reveal">
+        <h3 style="font-family:var(--font-head);font-size:1.25rem;font-weight:700;margin-bottom:1.5rem">A Query Worth Showing</h3>
+        <div class="sql-window">
+          <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">customer_segments.sql</span></div>
+          <div class="sql-code">
+            <span class="cm">-- RFM Customer Segmentation</span><br>
+            <span class="kw">WITH</span> <span class="tbl">rfm</span> <span class="kw">AS</span> (<br>
+            &nbsp;&nbsp;<span class="kw">SELECT</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;customer_id,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">DATEDIFF</span>(<span class="str">'day'</span>, <span class="fn">MAX</span>(order_date), <span class="fn">CURRENT_DATE</span>) <span class="kw">AS</span> recency,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">COUNT</span>(*) <span class="kw">AS</span> frequency,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span>(order_value) <span class="kw">AS</span> monetary<br>
+            &nbsp;&nbsp;<span class="kw">FROM</span> <span class="tbl">orders</span><br>
+            &nbsp;&nbsp;<span class="kw">GROUP BY</span> customer_id<br>
+            ),<br>
+            <span class="tbl">scored</span> <span class="kw">AS</span> (<br>
+            &nbsp;&nbsp;<span class="kw">SELECT</span> *,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> recency <span class="kw">DESC</span>) r_score,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> frequency) f_score,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> monetary) m_score<br>
+            &nbsp;&nbsp;<span class="kw">FROM</span> <span class="tbl">rfm</span><br>
+            )<br>
+            <span class="kw">SELECT</span> *,<br>
+            &nbsp;&nbsp;<span class="kw">CASE</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">WHEN</span> r_score + f_score + m_score >= <span class="num">13</span> <span class="kw">THEN</span> <span class="str">'Champion'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">WHEN</span> r_score >= <span class="num">4</span> <span class="kw">THEN</span> <span class="str">'Loyal'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">ELSE</span> <span class="str">'At Risk'</span><br>
+            &nbsp;&nbsp;<span class="kw">END</span> <span class="kw">AS</span> segment<br>
+            <span class="kw">FROM</span> <span class="tbl">scored</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI & Analytics -->
+<section id="ai">
+  <div class="section-wrap">
+    <p class="section-label reveal">Emerging Capabilities</p>
+    <h2 class="section-title reveal">AI-Augmented Analytics</h2>
+    <p class="section-desc reveal">Combining classical data analytics with modern AI tools to automate insight generation, forecast trends, and build intelligent data pipelines.</p>
+
+    <!-- AI tools grid -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:4rem">
+
+      <div class="reveal" style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;transition:box-shadow .2s;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)"></div>
+        <div style="font-size:1.6rem;margin-bottom:1rem">🤖</div>
+        <h3 style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:.5rem;color:var(--text)">Copilot & ChatGPT for Data</h3>
+        <p style="color:var(--muted);font-size:.88rem;line-height:1.7;font-weight:300;margin-bottom:1.25rem">Leveraging Microsoft Copilot in Power BI and Excel, and ChatGPT for query generation, report narrative drafting, and automated data commentary.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          <span class="tag active">Copilot in Power BI</span>
+          <span class="tag">Copilot in Excel</span>
+          <span class="tag">Prompt Engineering</span>
+        </div>
+      </div>
+
+      <div class="reveal" style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;transition:box-shadow .2s;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent2)"></div>
+        <div style="font-size:1.6rem;margin-bottom:1rem">📈</div>
+        <h3 style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:.5rem;color:var(--text)">Predictive Analytics</h3>
+        <p style="color:var(--muted);font-size:.88rem;line-height:1.7;font-weight:300;margin-bottom:1.25rem">Building forecasting models using Python-based ML libraries integrated with Power BI via the Python visual, and time-series forecasting with Azure ML.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          <span class="tag active">Forecasting</span>
+          <span class="tag">Python in Power BI</span>
+          <span class="tag">Azure ML</span>
+        </div>
+      </div>
+
+      <div class="reveal" style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;transition:box-shadow .2s;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent3)"></div>
+        <div style="font-size:1.6rem;margin-bottom:1rem">🔍</div>
+        <h3 style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:.5rem;color:var(--text)">Natural Language to SQL</h3>
+        <p style="color:var(--muted);font-size:.88rem;line-height:1.7;font-weight:300;margin-bottom:1.25rem">Using LLM-assisted query generation tools to help non-technical stakeholders self-serve data questions, reducing analyst bottlenecks by up to 60%.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          <span class="tag active">NL2SQL</span>
+          <span class="tag">LLM Integration</span>
+          <span class="tag">Self-Service BI</span>
+        </div>
+      </div>
+
+      <div class="reveal" style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;transition:box-shadow .2s;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent4)"></div>
+        <div style="font-size:1.6rem;margin-bottom:1rem">⚙️</div>
+        <h3 style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:.5rem;color:var(--text)">Automated Insight Generation</h3>
+        <p style="color:var(--muted);font-size:.88rem;line-height:1.7;font-weight:300;margin-bottom:1.25rem">Designing pipelines that automatically detect anomalies, surface outliers, and generate plain-language summaries from raw data refreshes overnight.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          <span class="tag active">Anomaly Detection</span>
+          <span class="tag">Automated Reporting</span>
+          <span class="tag">Power Automate</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AI workflow diagram -->
+    <div class="reveal" style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2.5rem">
+      <div style="font-family:var(--font-body);font-size:.72rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:2rem">AI-Augmented Analytics Workflow</div>
+      <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:1.5rem">
+
+        <div style="flex:1;min-width:120px;text-align:center">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(27,58,107,.08);border:1.5px solid rgba(27,58,107,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.3rem">🗃️</div>
+          <div style="font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.25rem">Raw Data</div>
+          <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">SQL · CSV · API</div>
+        </div>
+
+        <div style="font-size:1.2rem;color:var(--accent2);padding:0 .25rem;flex-shrink:0">→</div>
+
+        <div style="flex:1;min-width:120px;text-align:center">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(200,148,58,.08);border:1.5px solid rgba(200,148,58,.25);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.3rem">🤖</div>
+          <div style="font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.25rem">AI Processing</div>
+          <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">Copilot · LLM · ML</div>
+        </div>
+
+        <div style="font-size:1.2rem;color:var(--accent2);padding:0 .25rem;flex-shrink:0">→</div>
+
+        <div style="flex:1;min-width:120px;text-align:center">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(45,106,79,.08);border:1.5px solid rgba(45,106,79,.25);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.3rem">📊</div>
+          <div style="font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.25rem">Smart Dashboard</div>
+          <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">Power BI · Excel</div>
+        </div>
+
+        <div style="font-size:1.2rem;color:var(--accent2);padding:0 .25rem;flex-shrink:0">→</div>
+
+        <div style="flex:1;min-width:120px;text-align:center">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(139,26,26,.08);border:1.5px solid rgba(139,26,26,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.3rem">💡</div>
+          <div style="font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.25rem">Auto Insights</div>
+          <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">Narrative · Alerts</div>
+        </div>
+
+        <div style="font-size:1.2rem;color:var(--accent2);padding:0 .25rem;flex-shrink:0">→</div>
+
+        <div style="flex:1;min-width:120px;text-align:center">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(27,58,107,.08);border:1.5px solid rgba(27,58,107,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.3rem">🎯</div>
+          <div style="font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:.25rem">Decision</div>
+          <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--muted)">Stakeholder Action</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AI stat strip -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem" class="reveal">
+      <div style="background:var(--bg2);padding:2rem;text-align:center">
+        <span style="font-family:var(--font-head);font-size:2.4rem;font-weight:700;color:var(--accent);display:block;line-height:1">60%</span>
+        <span style="font-family:var(--font-body);font-size:.68rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:.4rem;font-weight:500">Faster Reporting</span>
+      </div>
+      <div style="background:var(--bg2);padding:2rem;text-align:center">
+        <span style="font-family:var(--font-head);font-size:2.4rem;font-weight:700;color:var(--accent2);display:block;line-height:1">3×</span>
+        <span style="font-family:var(--font-body);font-size:.68rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:.4rem;font-weight:500">More Insights Found</span>
+      </div>
+      <div style="background:var(--bg2);padding:2rem;text-align:center">
+        <span style="font-family:var(--font-head);font-size:2.4rem;font-weight:700;color:var(--accent3);display:block;line-height:1">90%</span>
+        <span style="font-family:var(--font-body);font-size:.68rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:.4rem;font-weight:500">Anomaly Detection Rate</span>
+      </div>
+      <div style="background:var(--bg2);padding:2rem;text-align:center">
+        <span style="font-family:var(--font-head);font-size:2.4rem;font-weight:700;color:var(--accent4);display:block;line-height:1">24/7</span>
+        <span style="font-family:var(--font-body);font-size:.68rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:.4rem;font-weight:500">Automated Pipelines</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="section-wrap">
+    <p class="section-label reveal">Get In Touch</p>
+    <h2 class="section-title reveal">Let's Work Together</h2>
+    <p class="section-desc reveal">Have a data challenge? Looking to build dashboards, optimise queries, or create financial models? I'd love to help turn your data into decisions.</p>
+    <div class="contact-cards reveal">
+      <a href="mailto:ovidiuboghean.ing@gmail.com" class="contact-link">✉️ &nbsp;ovidiuboghean.ing@gmail.com</a>
+      <a href="https://www.linkedin.com/in/ovidiu-boghean-29ba8221b/" class="contact-link">💼 &nbsp;LinkedIn</a>
+      <a href="	https://wa.me/+40756070117" class="contact-link">🐙 &nbsp;Whatsapp:+40756070117</a>
+      <a href="#" class="contact-link">📄 &nbsp;Download CV</a>
+    </div>
+  </div>
+</section>
+
+<script>
+// Cursor
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+(function animRing(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
+document.querySelectorAll('a,button,.project-card,.skill-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='18px';cursor.style.height='18px';cursor.style.background='var(--accent2)'});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';cursor.style.background='var(--accent)'});
+});
+
+// Scroll progress
+const prog=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  prog.style.width=pct+'%';
+});
+
+// Reveal on scroll
+const reveals=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
+  });
+},{threshold:.15});
+reveals.forEach(el=>io.observe(el));
+
+// Skill bars
+const barIO=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const fill=e.target.querySelector('.skill-bar-fill');
+      const pct=e.target.querySelector('[class$="-pct"]');
+      const target=parseInt(fill.dataset.width);
+      fill.style.width=target+'%';
+      let v=0;const step=()=>{v=Math.min(v+2,target);if(pct)pct.textContent=v+'%';if(v<target)requestAnimationFrame(step)};
+      requestAnimationFrame(step);
+      barIO.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.skill-card').forEach(el=>barIO.observe(el));
+
+// Hero chart
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const vals1=[65,72,58,80,91,75,88,95,82,77,99,105];
+const vals2=[45,55,42,61,70,58,67,73,62,59,78,82];
+const chart=document.getElementById('heroChart');
+const labels=document.getElementById('heroLabels');
+months.forEach((m,i)=>{
+  const grp=document.createElement('div');grp.className='bar-group';
+  const b1=document.createElement('div');b1.className='bar b-accent';b1.style.height=vals1[i]+'px';b1.style.animationDelay=(i*.05)+'s';
+  const b2=document.createElement('div');b2.className='bar b-accent2';b2.style.height=vals2[i]+'px';b2.style.animationDelay=(i*.05+.1)+'s';
+  grp.append(b1,b2);chart.appendChild(grp);
+  const lbl=document.createElement('div');lbl.className='chart-label';lbl.textContent=m;labels.appendChild(lbl);
+});
+
+// Animate hero metrics
+function animNum(el,target,suffix,decimals=0){
+  let v=0;const step=()=>{
+    v=Math.min(v+(target/60),target);
+    el.textContent=(decimals?v.toFixed(decimals):Math.round(v))+suffix;
+    if(v<target)requestAnimationFrame(step);
+  };requestAnimationFrame(step);
+}
+setTimeout(()=>{
+  animNum(document.getElementById('m1'),2.4,'M',1);
+  animNum(document.getElementById('m2'),23,'%');
+  animNum(document.getElementById('m3'),48,'');
+},600);
+
+// Counter animation
+const counterIO=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const target=parseFloat(e.target.dataset.target);
+      const display=e.target.querySelector('span');
+      const decimals=target%1!==0?1:0;
+      let v=0;const step=()=>{
+        v=Math.min(v+(target/80),target);
+        display.textContent=decimals?v.toFixed(decimals):Math.round(v);
+        if(v<target)requestAnimationFrame(step);
+      };requestAnimationFrame(step);
+      counterIO.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.counter').forEach(el=>counterIO.observe(el));
+</script>
+</body>
+</html>
