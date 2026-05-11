@@ -452,6 +452,249 @@ section{position:relative;z-index:1}
   <div class="stat-block reveal"><span class="stat-num counter" data-target="4"><span>0</span>+</span><span class="stat-lbl">Years Experience</span></div>
 </div>
 
+<!--New PROJECTS -->
+  <section id="projects">
+  <div class="section-wrap">
+    <p class="section-label reveal visible">Portfolio</p>
+    <h2 class="section-title reveal visible">Featured Projects</h2>
+    <p class="section-desc reveal visible">A selection of analytics work spanning SQL optimisation, DAX modelling, Power BI dashboards, Python analysis, and AI-augmented reporting.</p>
+    <div class="projects-grid">
+
+      <!-- SQL -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz">
+            <div class="sql-window" style="margin:0;width:100%">
+              <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">revenue_analysis.sql</span></div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
+                <span class="kw">WITH</span> <span class="tbl">monthly_rev</span> <span class="kw">AS</span> (<br>
+                &nbsp;&nbsp;<span class="kw">SELECT</span> <span class="fn">DATETRUNC</span>(<span class="str">'month'</span>, order_date),<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span>(revenue) <span class="kw">AS</span> total_rev<br>
+                &nbsp;&nbsp;<span class="kw">FROM</span> <span class="tbl">orders</span> <span class="kw">GROUP BY</span> <span class="num">1</span><br>
+                )<br>
+                <span class="kw">SELECT</span> *, <span class="fn">LAG</span>(total_rev) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> month)<br>
+                <span class="kw">FROM</span> <span class="tbl">monthly_rev</span>
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-sql">SQL</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Revenue Trend Analysis</h3>
+          <p class="project-desc">Multi-CTE query with window functions analysing 18-month revenue trends across 2.4M+ rows with sub-second performance.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">T-SQL</span><span class="tag">CTEs</span><span class="tag">Window Fns</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Power BI -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;gap:.75rem">
+            <div style="display:flex;gap:.75rem;align-items:center">
+              <div class="donut-wrap">
+                <svg width="130" height="130" viewBox="0 0 140 140">
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#e8e4de" stroke-width="18"></circle>
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#1b3a6b" stroke-width="18" stroke-dasharray="196 131" stroke-dashoffset="-49" stroke-linecap="round"></circle>
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#c8943a" stroke-width="18" stroke-dasharray="110 217" stroke-dashoffset="-245" stroke-linecap="round"></circle>
+                  <circle cx="70" cy="70" r="52" fill="none" stroke="#2d6a4f" stroke-width="18" stroke-dasharray="60 267" stroke-dashoffset="-355" stroke-linecap="round"></circle>
+                </svg>
+                <div class="donut-label">74%<span>Quota</span></div>
+              </div>
+              <div style="flex:1">
+                <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-bottom:.4rem">Region Split</div>
+                <div style="display:flex;flex-direction:column;gap:.35rem">
+                  <div style="display:flex;align-items:center;gap:.4rem"><div style="width:7px;height:7px;border-radius:50%;background:#1b3a6b"></div><span style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted)">North 60%</span></div>
+                  <div style="display:flex;align-items:center;gap:.4rem"><div style="width:7px;height:7px;border-radius:50%;background:#c8943a"></div><span style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted)">South 34%</span></div>
+                  <div style="display:flex;align-items:center;gap:.4rem"><div style="width:7px;height:7px;border-radius:50%;background:#2d6a4f"></div><span style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted)">West 18%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-pbi">Power BI</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Executive Sales Dashboard</h3>
+          <p class="project-desc">Real-time Power BI dashboard with custom visuals, row-level security, and advanced DAX KPI measures for C-suite reporting.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">RLS</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Excel -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
+            <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-bottom:.4rem;padding:0 .25rem">Financial Model — Scenario Analysis</div>
+            <div class="excel-grid">
+              <div class="cell header">Month</div><div class="cell header">Revenue</div><div class="cell header">COGS</div><div class="cell header">Margin</div><div class="cell header">Growth</div><div class="cell header">Fcst</div>
+              <div class="cell data">Jan</div><div class="cell data">82K</div><div class="cell data">41K</div><div class="cell formula">=50%</div><div class="cell data">—</div><div class="cell formula">85K</div>
+              <div class="cell data">Feb</div><div class="cell data">94K</div><div class="cell data">45K</div><div class="cell formula">=52%</div><div class="cell data">+14%</div><div class="cell formula">97K</div>
+              <div class="cell data">Mar</div><div class="cell data">108K</div><div class="cell data">50K</div><div class="cell formula">=54%</div><div class="cell data">+15%</div><div class="cell formula">112K</div>
+              <div class="cell total">Total</div><div class="cell total">284K</div><div class="cell total">136K</div><div class="cell total">52%</div><div class="cell total">+29%</div><div class="cell total">294K</div>
+            </div>
+          </div>
+          <span class="project-badge pb-excel">Excel</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Financial Forecasting Model</h3>
+          <p class="project-desc">Dynamic 3-scenario Excel model with Power Pivot, automated data refresh, and conditional formatting dashboards for quarterly planning.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">Excel</span><span class="tag">Power Pivot</span><span class="tag">VBA</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAX -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
+            <div class="sql-window" style="margin:0">
+              <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">YTD_Revenue.dax</span></div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
+                <span class="cm">-- Year-over-year comparison</span><br>
+                <span class="tbl">YTD Sales</span> :=<br>
+                <span class="kw">CALCULATE</span>(<br>
+                &nbsp;&nbsp;[Total Revenue],<br>
+                &nbsp;&nbsp;<span class="fn">DATESYTD</span>(<span class="str">'Date'[Date]</span>)<br>
+                )
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-dax">DAX</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Time Intelligence Library</h3>
+          <p class="project-desc">Reusable DAX measure library with 40+ time intelligence calculations — YTD, MTD, rolling averages, and YoY variance analysis.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">DAX</span><span class="tag">CALCULATE</span><span class="tag">DATESYTD</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Python -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
+            <div class="sql-window" style="margin:0">
+              <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">churn_model.py</span></div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
+                <span class="kw">import</span> pandas <span class="kw">as</span> <span class="tbl">pd</span><br>
+                <span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> <span class="fn">RandomForestClassifier</span><br>
+                <span class="cm"># Train churn prediction model</span><br>
+                model = <span class="fn">RandomForestClassifier</span>(n_estimators=<span class="num">100</span>)<br>
+                model.<span class="fn">fit</span>(X_train, y_train)<br>
+                score = model.<span class="fn">score</span>(X_test, y_test)<br>
+                <span class="cm"># accuracy: 0.89</span>
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-python">Python</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Customer Churn Predictor</h3>
+          <p class="project-desc">Random Forest model trained on 50K customer records achieving 89% accuracy. Integrated predictions back into Power BI via Python visual.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">Python</span><span class="tag">scikit-learn</span><span class="tag">Power BI</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Ops Dashboard -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;gap:.5rem;padding:1rem">
+            <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-bottom:.25rem">Plant Operations KPI Board</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem">
+              <div style="background:rgba(27,58,107,.07);border:1px solid rgba(27,58,107,.15);border-radius:3px;padding:.5rem;text-align:center"><div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--accent)">98.2%</div><div style="font-family:var(--font-mono);font-size:.58rem;color:var(--muted)">OEE</div></div>
+              <div style="background:rgba(45,106,79,.07);border:1px solid rgba(45,106,79,.15);border-radius:3px;padding:.5rem;text-align:center"><div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--accent3)">99.1%</div><div style="font-family:var(--font-mono);font-size:.58rem;color:var(--muted)">Quality</div></div>
+              <div style="background:rgba(200,148,58,.07);border:1px solid rgba(200,148,58,.2);border-radius:3px;padding:.5rem;text-align:center"><div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--accent2)">−12%</div><div style="font-family:var(--font-mono);font-size:.58rem;color:var(--muted)">Downtime</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:3px;height:55px;margin-top:.25rem">
+              <div style="flex:1;background:var(--accent);opacity:.5;border-radius:2px 2px 0 0;height:60%"></div>
+              <div style="flex:1;background:var(--accent);opacity:.6;border-radius:2px 2px 0 0;height:75%"></div>
+              <div style="flex:1;background:var(--accent);opacity:.7;border-radius:2px 2px 0 0;height:65%"></div>
+              <div style="flex:1;background:var(--accent);opacity:.8;border-radius:2px 2px 0 0;height:85%"></div>
+              <div style="flex:1;background:var(--accent2);border-radius:2px 2px 0 0;height:100%"></div>
+              <div style="flex:1;background:var(--accent2);border-radius:2px 2px 0 0;height:95%"></div>
+            </div>
+          </div>
+          <span class="project-badge pb-pbi">Power BI</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Plant Operations Dashboard</h3>
+          <p class="project-desc">Live Bosch plant KPI board tracking OEE, quality rate, and downtime with drill-through by line and shift — replacing 6 manual Excel reports.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">Power BI</span><span class="tag">SQL Server</span><span class="tag">DAX</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Survey Analytics -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;gap:.5rem;padding:1rem">
+            <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-bottom:.5rem">Survey Response Analysis</div>
+            <div style="display:flex;flex-direction:column;gap:.4rem">
+              <div><div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.6rem;color:var(--muted);margin-bottom:.2rem"><span>Strongly Agree</span><span>42%</span></div><div style="height:6px;background:var(--bg3);border-radius:3px"><div style="width:42%;height:100%;background:var(--accent);border-radius:3px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.6rem;color:var(--muted);margin-bottom:.2rem"><span>Agree</span><span>31%</span></div><div style="height:6px;background:var(--bg3);border-radius:3px"><div style="width:31%;height:100%;background:var(--accent2);border-radius:3px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.6rem;color:var(--muted);margin-bottom:.2rem"><span>Neutral</span><span>15%</span></div><div style="height:6px;background:var(--bg3);border-radius:3px"><div style="width:15%;height:100%;background:var(--accent3);border-radius:3px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.6rem;color:var(--muted);margin-bottom:.2rem"><span>Disagree</span><span>12%</span></div><div style="height:6px;background:var(--bg3);border-radius:3px"><div style="width:12%;height:100%;background:var(--accent4);border-radius:3px"></div></div></div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--accent2);margin-top:.5rem">n = 12,400 respondents · 18 markets</div>
+          </div>
+          <span class="project-badge pb-sql">SQL + Excel</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Market Research Panel Analytics</h3>
+          <p class="project-desc">End-to-end survey data pipeline for Talk Online Panel — SQL data cleaning, cross-tabulation in Excel, and automated client delivery reports across 18 markets.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">SQL</span><span class="tag">Excel</span><span class="tag">Python</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Python ETL -->
+      <div class="project-card reveal visible">
+        <div class="project-preview">
+          <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
+            <div class="sql-window" style="margin:0">
+              <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">etl_pipeline.py</span></div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
+                <span class="cm"># Automated nightly ETL</span><br>
+                <span class="kw">def</span> <span class="fn">run_pipeline</span>(date):<br>
+                &nbsp;&nbsp;df = pd.<span class="fn">read_sql</span>(query, conn)<br>
+                &nbsp;&nbsp;df = <span class="fn">clean_transform</span>(df)<br>
+                &nbsp;&nbsp;<span class="fn">load_to_warehouse</span>(df)<br>
+                &nbsp;&nbsp;<span class="fn">refresh_pbi_dataset</span>()<br>
+                <span class="cm"># Runs 02:00 daily via Task Scheduler</span>
+              </div>
+            </div>
+          </div>
+          <span class="project-badge pb-python">Python</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">Automated ETL Pipeline</h3>
+          <p class="project-desc">Nightly Python pipeline extracting from 4 source systems, transforming 300K+ rows, loading to data warehouse, and triggering Power BI refresh automatically.</p>
+          <div class="project-meta">
+            <div class="project-tools"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">SQL Server</span></div>
+            <span class="project-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 <!-- PROJECTS -->
 <section id="projects">
   <div class="section-wrap">
