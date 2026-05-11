@@ -168,12 +168,13 @@ section{position:relative;z-index:1}
 .tl-desc{color:var(--muted);font-size:.85rem;line-height:1.7;font-weight:300}
 
 /* SQL WINDOW */
-.sql-window{background:var(--text);border:1px solid var(--border2);border-radius:4px;overflow:hidden;margin:2rem 0}
+.sql-window{background:var(--text);border:1px solid var(--border2);border-radius:4px;overflow:hidden;margin:2rem 0;max-width:100%}
 .sql-titlebar{background:#252535;padding:.65rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid #333345}
 .dot{width:10px;height:10px;border-radius:50%}
 .dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c840}
 .sql-filename{font-family:var(--font-mono);font-size:.7rem;color:#888;margin-left:.5rem}
-.sql-code{padding:1.25rem;font-family:var(--font-mono);font-size:.8rem;line-height:1.8;overflow-x:auto;background:#1e1e2e;color:#cdd6f4}
+.sql-code{padding:1.25rem;font-family:var(--font-mono);font-size:.8rem;line-height:1.8;overflow-x:auto;overflow-y:visible;background:#1e1e2e;color:#cdd6f4;display:block;width:100%;box-sizing:border-box}
+.sql-code pre{white-space:pre-wrap;word-break:break-word;margin:0;font:inherit;color:inherit}
 .kw{color:#cba6f7}.fn{color:#89b4fa}.str{color:#a6e3a1}.cm{color:#585b70;font-style:italic}.tbl{color:#fab387}.num{color:#f9e2af}
 
 /* STATS */
@@ -242,7 +243,16 @@ section{position:relative;z-index:1}
 .py-chart{display:flex;align-items:flex-end;gap:4px;height:80px;margin-top:.75rem}
 .py-bar{flex:1;border-radius:2px 2px 0 0;background:#306998;opacity:.7}
 
-/* RESPONSIVE */
+/* EXPERIENCE GRID — always uses a class so media queries work */
+.experience-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+/* Prevent any child from bleeding outside its column */
+.experience-grid > *{min-width:0;overflow:hidden}
+
+/* SQL / code — scrollable container, pre wraps on mobile */
+.sql-code{padding:1.25rem;font-family:var(--font-mono);font-size:.8rem;line-height:1.8;overflow-x:auto;background:#1e1e2e;color:#cdd6f4;display:block;box-sizing:border-box}
+.sql-code pre{margin:0;font:inherit;color:inherit;white-space:pre-wrap;word-break:break-word}
+
+/* RESPONSIVE — tablet */
 @media(max-width:900px){
   nav{padding:.85rem 1.5rem}
   .nav-links{display:none}
@@ -254,22 +264,47 @@ section{position:relative;z-index:1}
   .section-wrap{padding:4rem 1.5rem}
   .section-desc{margin-bottom:2.5rem}
   .stats-row{grid-template-columns:repeat(2,1fr)}
+  .experience-grid{grid-template-columns:1fr;gap:2.5rem}
+  .ai-grid{grid-template-columns:1fr 1fr}
   .ai-workflow .workflow-steps{flex-direction:column;align-items:flex-start;gap:1rem}
   .workflow-step{display:flex;align-items:center;gap:1rem;text-align:left;min-width:unset;width:100%}
   .workflow-icon{margin:0;flex-shrink:0}
   .workflow-arrow{transform:rotate(90deg)}
 }
+
+/* RESPONSIVE — mobile */
 @media(max-width:600px){
-  .hero-title{font-size:2.2rem}
-  .btn-primary,.btn-secondary{padding:.75rem 1.5rem;font-size:.78rem}
+  nav{padding:.75rem 1rem}
+  .nav-logo{font-size:1rem}
+  .hero-title{font-size:2rem}
+  .btn-primary,.btn-secondary{padding:.7rem 1.25rem;font-size:.76rem}
+  .hero-actions{gap:.75rem}
   .projects-grid{grid-template-columns:1fr}
   .skills-grid{grid-template-columns:1fr}
+  .ai-grid{grid-template-columns:1fr}
   .contact-cards{flex-direction:column;align-items:stretch}
   .contact-link{justify-content:center}
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .stat-num{font-size:2.2rem}
-  #experience .section-wrap > div[style]{grid-template-columns:1fr !important}
+  .experience-grid{grid-template-columns:1fr;gap:2rem}
+  .experience-grid > *{min-width:0;max-width:100%;overflow:hidden}
   .ai-stats{grid-template-columns:repeat(2,1fr)}
+  /* code blocks smaller font on mobile, wraps at word boundaries */
+  .sql-code{font-size:.68rem;line-height:1.6;padding:.75rem}
+  .sql-code pre{white-space:pre-wrap;word-break:break-word}
+  /* sql window never wider than screen */
+  .sql-window{max-width:100%;overflow:hidden}
+  /* timeline breathing room */
+  .timeline{padding-left:1.25rem}
+  .tl-item{padding:0 0 2rem 1.25rem}
+  /* section padding tighter */
+  .section-wrap{padding:3rem 1.25rem}
+  .section-title{font-size:1.7rem}
+  /* float cards escape bounds on mobile */
+  .float-card{display:none}
+  .ai-workflow{padding:1.25rem}
+  .ai-stat-num{font-size:1.8rem}
+  .project-preview{height:165px}
 }
 </style>
 </head>
@@ -430,15 +465,17 @@ section{position:relative;z-index:1}
           <div class="project-viz">
             <div class="sql-window" style="margin:0;width:100%">
               <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">revenue_analysis.sql</span></div>
-              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
-                <span class="kw">WITH</span> <span class="tbl">monthly_rev</span> <span class="kw">AS</span> (<br>
-                &nbsp;&nbsp;<span class="kw">SELECT</span> <span class="fn">DATETRUNC</span>(<span class="str">'month'</span>, order_date),<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span>(revenue) <span class="kw">AS</span> total_rev<br>
-                &nbsp;&nbsp;<span class="kw">FROM</span> <span class="tbl">orders</span> <span class="kw">GROUP BY</span> <span class="num">1</span><br>
-                )<br>
-                <span class="kw">SELECT</span> *, <span class="fn">LAG</span>(total_rev) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> month)<br>
-                <span class="kw">FROM</span> <span class="tbl">monthly_rev</span>
-              </div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65"><pre><span class="kw">WITH</span> <span class="tbl">monthly_rev</span> <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    <span class="fn">DATETRUNC</span>(<span class="str">'month'</span>, order_date),
+    <span class="fn">SUM</span>(revenue) <span class="kw">AS</span> total_rev
+  <span class="kw">FROM</span> <span class="tbl">orders</span>
+  <span class="kw">GROUP BY</span> <span class="num">1</span>
+)
+<span class="kw">SELECT</span> *,
+  <span class="fn">LAG</span>(total_rev)
+    <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> month)
+<span class="kw">FROM</span> <span class="tbl">monthly_rev</span></pre>
             </div>
           </div>
           <span class="project-badge pb-sql">SQL</span>
@@ -520,14 +557,14 @@ section{position:relative;z-index:1}
           <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
             <div class="sql-window" style="margin:0">
               <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">YTD_Revenue.dax</span></div>
-              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
-                <span class="cm">-- Year-over-year comparison</span><br>
-                <span class="tbl">YTD Sales</span> :=<br>
-                <span class="kw">CALCULATE</span>(<br>
-                &nbsp;&nbsp;[Total Revenue],<br>
-                &nbsp;&nbsp;<span class="fn">DATESYTD</span>(<span class="str">'Date'[Date]</span>)<br>
-                )
-              </div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65"><pre><span class="cm">-- Year-over-year comparison</span>
+<span class="tbl">YTD Sales</span> :=
+<span class="kw">CALCULATE</span>(
+  [Total Revenue],
+  <span class="fn">DATESYTD</span>(
+    <span class="str">'Date'[Date]</span>
+  )
+)</pre>
             </div>
           </div>
           <span class="project-badge pb-dax">DAX</span>
@@ -548,15 +585,15 @@ section{position:relative;z-index:1}
           <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
             <div class="sql-window" style="margin:0">
               <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">churn_model.py</span></div>
-              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
-                <span class="kw">import</span> pandas <span class="kw">as</span> <span class="tbl">pd</span><br>
-                <span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> <span class="fn">RandomForestClassifier</span><br>
-                <span class="cm"># Train churn prediction model</span><br>
-                model = <span class="fn">RandomForestClassifier</span>(n_estimators=<span class="num">100</span>)<br>
-                model.<span class="fn">fit</span>(X_train, y_train)<br>
-                score = model.<span class="fn">score</span>(X_test, y_test)<br>
-                <span class="cm"># accuracy: 0.89</span>
-              </div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65"><pre><span class="kw">import</span> pandas <span class="kw">as</span> <span class="tbl">pd</span>
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> <span class="fn">RandomForestClassifier</span>
+<span class="cm"># Train churn prediction model</span>
+model = <span class="fn">RandomForestClassifier</span>(
+  n_estimators=<span class="num">100</span>
+)
+model.<span class="fn">fit</span>(X_train, y_train)
+score = model.<span class="fn">score</span>(X_test, y_test)
+<span class="cm"># accuracy: 0.89</span></pre>
             </div>
           </div>
           <span class="project-badge pb-python">Python</span>
@@ -633,15 +670,13 @@ section{position:relative;z-index:1}
           <div class="project-viz" style="flex-direction:column;align-items:stretch;padding:.75rem">
             <div class="sql-window" style="margin:0">
               <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">etl_pipeline.py</span></div>
-              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65">
-                <span class="cm"># Automated nightly ETL</span><br>
-                <span class="kw">def</span> <span class="fn">run_pipeline</span>(date):<br>
-                &nbsp;&nbsp;df = pd.<span class="fn">read_sql</span>(query, conn)<br>
-                &nbsp;&nbsp;df = <span class="fn">clean_transform</span>(df)<br>
-                &nbsp;&nbsp;<span class="fn">load_to_warehouse</span>(df)<br>
-                &nbsp;&nbsp;<span class="fn">refresh_pbi_dataset</span>()<br>
-                <span class="cm"># Runs 02:00 daily via Task Scheduler</span>
-              </div>
+              <div class="sql-code" style="padding:.65rem;font-size:.7rem;line-height:1.65"><pre><span class="cm"># Automated nightly ETL</span>
+<span class="kw">def</span> <span class="fn">run_pipeline</span>(date):
+  df = pd.<span class="fn">read_sql</span>(query, conn)
+  df = <span class="fn">clean_transform</span>(df)
+  <span class="fn">load_to_warehouse</span>(df)
+  <span class="fn">refresh_pbi_dataset</span>()
+<span class="cm"># Runs 02:00 via Task Scheduler</span></pre>
             </div>
           </div>
           <span class="project-badge pb-python">Python</span>
@@ -665,7 +700,7 @@ section{position:relative;z-index:1}
   <div class="section-wrap">
     <p class="section-label reveal">Background</p>
     <h2 class="section-title reveal">Experience</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem">
+    <div class="experience-grid">
       <div class="timeline reveal">
         <div class="tl-item">
           <div class="tl-date">2025 — Present</div>
@@ -690,27 +725,30 @@ section{position:relative;z-index:1}
         <h3 style="font-family:var(--font-head);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem">A Query Worth Showing</h3>
         <div class="sql-window">
           <div class="sql-titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="sql-filename">customer_segments.sql</span></div>
-          <div class="sql-code">
-            <span class="cm">-- RFM Customer Segmentation</span><br>
-            <span class="kw">WITH</span> <span class="tbl">rfm</span> <span class="kw">AS</span> (<br>
-            &nbsp;&nbsp;<span class="kw">SELECT</span> customer_id,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">DATEDIFF</span>(<span class="str">'day'</span>,<span class="fn">MAX</span>(order_date),<span class="fn">CURRENT_DATE</span>) <span class="kw">AS</span> recency,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">COUNT</span>(*) <span class="kw">AS</span> frequency,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span>(order_value) <span class="kw">AS</span> monetary<br>
-            &nbsp;&nbsp;<span class="kw">FROM</span> <span class="tbl">orders</span> <span class="kw">GROUP BY</span> customer_id<br>
-            ), <span class="tbl">scored</span> <span class="kw">AS</span> (<br>
-            &nbsp;&nbsp;<span class="kw">SELECT</span> *,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> recency <span class="kw">DESC</span>) r_score,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> frequency) f_score,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> monetary) m_score<br>
-            &nbsp;&nbsp;<span class="kw">FROM</span> <span class="tbl">rfm</span><br>
-            )<br>
-            <span class="kw">SELECT</span> *, <span class="kw">CASE</span><br>
-            &nbsp;&nbsp;<span class="kw">WHEN</span> r_score+f_score+m_score >= <span class="num">13</span> <span class="kw">THEN</span> <span class="str">'Champion'</span><br>
-            &nbsp;&nbsp;<span class="kw">WHEN</span> r_score >= <span class="num">4</span> <span class="kw">THEN</span> <span class="str">'Loyal'</span><br>
-            &nbsp;&nbsp;<span class="kw">ELSE</span> <span class="str">'At Risk'</span><br>
-            <span class="kw">END</span> <span class="kw">AS</span> segment <span class="kw">FROM</span> <span class="tbl">scored</span>
-          </div>
+          <div class="sql-code"><pre><span class="cm">-- RFM Customer Segmentation</span>
+<span class="kw">WITH</span> <span class="tbl">rfm</span> <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> customer_id,
+    <span class="fn">DATEDIFF</span>(<span class="str">'day'</span>, <span class="fn">MAX</span>(order_date),
+      <span class="fn">CURRENT_DATE</span>) <span class="kw">AS</span> recency,
+    <span class="fn">COUNT</span>(*) <span class="kw">AS</span> frequency,
+    <span class="fn">SUM</span>(order_value) <span class="kw">AS</span> monetary
+  <span class="kw">FROM</span> <span class="tbl">orders</span>
+  <span class="kw">GROUP BY</span> customer_id
+), <span class="tbl">scored</span> <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> *,
+    <span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> recency <span class="kw">DESC</span>) r_score,
+    <span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> frequency) f_score,
+    <span class="fn">NTILE</span>(<span class="num">5</span>) <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> monetary) m_score
+  <span class="kw">FROM</span> <span class="tbl">rfm</span>
+)
+<span class="kw">SELECT</span> *,
+  <span class="kw">CASE</span>
+    <span class="kw">WHEN</span> r_score+f_score+m_score &gt;= <span class="num">13</span>
+      <span class="kw">THEN</span> <span class="str">'Champion'</span>
+    <span class="kw">WHEN</span> r_score &gt;= <span class="num">4</span> <span class="kw">THEN</span> <span class="str">'Loyal'</span>
+    <span class="kw">ELSE</span> <span class="str">'At Risk'</span>
+  <span class="kw">END</span> <span class="kw">AS</span> segment
+<span class="kw">FROM</span> <span class="tbl">scored</span></pre>
         </div>
       </div>
     </div>
